@@ -1,10 +1,22 @@
 # Knowlegde base
-KB = [['b'], ['!b', 'c', 'k'], ['!l'], ['!c']]
-#    [['b'], ['!b', 'c'], ['!l'], ['c']]
-#    [['c'], ['!l']]
-
+KB = []
 
 # add knowledge to global knowlegde base (KB)
+
+
+def set_kb(knowledge: str) -> None:
+    knowledge_stms = []
+    # split AND-statements
+    and_stms = knowledge.split("&")
+    for stm in and_stms:
+        stripped = stm.replace(" ", "").replace("(", "").replace(")", "")
+        new_or = stripped.split("|")
+        knowledge_stms.append(new_or)
+
+    KB.clear()
+    KB.extend(knowledge_stms)
+
+
 def add_to_kb(knowledge: str) -> None:
     knowledge_stms = []
     # split AND-statements
@@ -14,7 +26,7 @@ def add_to_kb(knowledge: str) -> None:
         new_or = stripped.split("|")
         knowledge_stms.append(new_or)
 
-    KB.append(knowledge_stms)
+    KB.extend(knowledge_stms)
 
 
 # type new knowledge (CNF)
@@ -43,12 +55,9 @@ def pl_resolution(KB: list) -> bool:
         # making temp array
         for i in range(len(clauses)):
             for j in range(i+1, len(clauses)):
-                print(f"c1={clauses[i]} og c2={clauses[j]}")
                 resolvents = pl_resolve(clauses[i], clauses[j])
-                print(f"resolvents: {resolvents}")
                 # contains the empty clause
                 if not resolvents:
-                    print("har empty list")
                     return True
                 if resolvents not in new:
                     new.append(resolvents)
@@ -56,7 +65,6 @@ def pl_resolution(KB: list) -> bool:
         # check if new is a subset of clauses
 
         if all(x in clauses for x in new):
-            print("her")
             return False
 
         # clauses union new
@@ -76,13 +84,11 @@ def pl_resolve(clause1: list, clause2: list) -> list:
             # c_i is negated, but not c_j
             if "!" in c_i and "!" not in c_j:
                 if c_i[1:] == c_j:
-                    print(f"1: c_i: {c_i} og c_j: {c_j} og m_set: {m_set}")
                     m_set.remove(c_i)
                     m_set.remove(c_j)
             # c_j is negated, but not c_i
             elif "!" not in c_i and "!" in c_j:
                 if c_i == c_j[1:]:
-                    print(f"2: c_i: {c_i} og c_j: {c_j} og m_set: {m_set}")
                     m_set.remove(c_i)
                     m_set.remove(c_j)
 
@@ -90,18 +96,19 @@ def pl_resolve(clause1: list, clause2: list) -> list:
     return list(set(m_set))
 
 
-# new_knowledge()
-hej = [["!a", "b"], ["a"], ["!c"]]
-pl_resolution(hej)
+###################################
+#
+#       TO RUN THE PROGRAM
+#
+###################################
+test_kb = "(!a | b) & a & !b"
+set_kb(test_kb)
+print(f"kb here: {KB}")
 
-print(pl_resolve(["!b", "a"], ["b", "!a"]))
-#print(f"KB: {KB}")
+# add_to_kb("!d")
+print(f"kb now: {KB}")
 
-
-'''
-hej = "A & (b | c) & ba | r"
-add_to_kb(hej)
-
-hej2 = "k &hej & (t| e)"
-add_to_kb(hej2)
-'''
+if pl_resolution(KB):
+    print("KB: resolution until empty set")
+else:
+    print("KB: resolution *NOT* until empty set")
