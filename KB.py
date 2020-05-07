@@ -1,9 +1,8 @@
 # Knowlegde base
 KB = []
 
-# add knowledge to global knowlegde base (KB)
 
-
+# set global KB
 def set_kb(knowledge: str) -> None:
     knowledge_stms = []
     # split AND-statements
@@ -17,6 +16,7 @@ def set_kb(knowledge: str) -> None:
     KB.extend(knowledge_stms)
 
 
+# add knowledge to global knowlegde base (KB)
 def add_to_kb(knowledge: str) -> None:
     knowledge_stms = []
     # split AND-statements
@@ -33,13 +33,6 @@ def add_to_kb(knowledge: str) -> None:
 def new_knowledge() -> None:
     knowledge = input("> ")
     add_to_kb(knowledge)
-
-
-'''
-KB = [['b'], ['!b', 'c'], ['!l']]
-     [['b'], ['!b', 'c'], ['!l'], ['c']]
-     [['c'], ['!l']]
-'''
 
 
 def pl_resolution(KB: list) -> bool:
