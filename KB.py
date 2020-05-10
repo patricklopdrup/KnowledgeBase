@@ -35,13 +35,21 @@ def new_knowledge() -> None:
     add_to_kb(knowledge)
 
 
-def pl_resolution(KB: list) -> bool:
-    # if "!" in a:
-    #     a = a[1:]
-    # else:
-    #     a = "!" + a
+def pl_resolution(KB: list, alpha: str) -> bool:
+    # nagate alpha
+    if "!" in alpha:
+        alpha = alpha[1:]
+    else:
+        alpha = "!" + alpha
 
+    # put alpha in a list
+    alpha_as_list = []
+    alpha_as_list.append(alpha)
+
+    # clauses = KB + !alpha
     clauses = KB
+    clauses.append(alpha_as_list)
+
     new = []
 
     while(True):
@@ -51,12 +59,14 @@ def pl_resolution(KB: list) -> bool:
                 resolvents = pl_resolve(clauses[i], clauses[j])
                 # contains the empty clause
                 if not resolvents:
+                    print(f"empty: {clauses[i]} og {clauses[j]}")
                     return True
                 if resolvents not in new:
+                    print(f"append: {resolvents}")
                     new.append(resolvents)
+                    print(f"new er: {new}")
 
         # check if new is a subset of clauses
-
         if all(x in clauses for x in new):
             return False
 
@@ -95,13 +105,14 @@ def pl_resolve(clause1: list, clause2: list) -> list:
 #
 ###################################
 test_kb = "(!a | b) & a & !b"
+# "(!d | b) & a & !g"
+
 set_kb(test_kb)
-print(f"kb here: {KB}")
 
-# add_to_kb("!d")
-print(f"kb now: {KB}")
+add_to_kb("!d")
 
-if pl_resolution(KB):
-    print("KB: resolution until empty set")
+alpha = "!b"
+if pl_resolution(KB, alpha):
+    print("KB entails alpha")
 else:
-    print("KB: resolution *NOT* until empty set")
+    print("KB does *NOT* entail alpha")
