@@ -59,12 +59,9 @@ def pl_resolution(KB: list, alpha: str) -> bool:
                 resolvents = pl_resolve(clauses[i], clauses[j])
                 # contains the empty clause
                 if not resolvents:
-                    print(f"empty: {clauses[i]} og {clauses[j]}")
                     return True
                 if resolvents not in new:
-                    print(f"append: {resolvents}")
                     new.append(resolvents)
-                    print(f"new er: {new}")
 
         # check if new is a subset of clauses
         if all(x in clauses for x in new):
